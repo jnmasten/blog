@@ -49,7 +49,7 @@
                 "mode": "Incremental",
                 "parameters": {},
                 "templateLink": {
-                    "uri": ""
+                    "uri": "https://raw.githubusercontent.com/jnmasten/blog/main/azure/kek/templates/userassignedmanagedidentity.json"
                 }
             }
         },
@@ -68,7 +68,7 @@
             }
         },
         {
-            "comments": "---------- LINKED DEPLOYMENT > SHARED > PRIMARY REGION ----------",
+            "comments": "---------- LINKED DEPLOYMENT > SHARED ----------",
             "type": "Microsoft.Resources/deployments",
             "name": "[concat('Shared_', parameters('Username'), '_', parameters('Timestamp'))]",
             "apiVersion": "2019-10-01",
@@ -93,7 +93,7 @@
                     }
                 },
                 "templateLink": {
-                    "uri": ""
+                    "uri": "https://raw.githubusercontent.com/jnmasten/blog/main/azure/kek/templates/shared.json"
                 }
             }
         }
