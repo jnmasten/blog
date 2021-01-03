@@ -1,4 +1,4 @@
-Params(
+Param(
 
     [parameter(Mandatory=$true)][string]$Location
     
