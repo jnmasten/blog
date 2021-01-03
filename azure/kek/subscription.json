@@ -57,7 +57,7 @@
             "comments": "---------- ROLE ASSIGNMENT > USER ASSIGNED MANAGED IDENTITY ----------",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2017-09-01",
-            "name": "6d4da268-fb61-412b-91d8-8e33227b4e5e",
+            "name": "6d4da268-fb61-412b-91d8-8e33227b4e5a",
             "dependsOn": [
                 "[variables('ResourceGroup')]",
                 "[concat('ManagedId_', parameters('Username'), '_', parameters('Timestamp'))]"
