@@ -1,0 +1,102 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/$scriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Timestamp": {
+            "type": "string",
+            "defaultValue": "[utcNow()]"
+        },
+        "UserObjectId": {
+            "type": "string",
+            "metadata": {
+                "description": "The Azure AD Object ID for the User Principal"
+            }
+        },
+        "Username": {
+            "type": "string",
+            "metadata": {
+                "description": "The username portion of the UPN for the principal deploying the script"
+            }
+        }
+    },
+    "variables": {
+        "ResourceGroup": "rg-shared-d-eastus"
+    },
+    "resources": [
+        {
+            "comments": "---------- RESOURCE GROUP ----------",
+            "name": "[variables('ResourceGroup')]",
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2019-10-01",
+            "location": "[deployment().location]",
+            "tags": {},
+            "properties": {}
+        },
+        {
+            "comments": "---------- LINKED DEPLOYMENT > USER ASSIGNED MANAGED IDENTITY ----------",
+            "type": "Microsoft.Resources/deployments",
+            "name": "[concat('ManagedId_', parameters('Username'), '_', parameters('Timestamp'))]",
+            "apiVersion": "2019-10-01",
+            "tags": {}, 
+            "dependsOn": [
+                "[variables('ResourceGroup')]"
+            ],
+            "resourceGroup": "[variables('ResourceGroup')]",
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {},
+                "templateLink": {
+                    "uri": ""
+                }
+            }
+        },
+        {
+            "comments": "---------- ROLE ASSIGNMENT > USER ASSIGNED MANAGED IDENTITY ----------",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2017-09-01",
+            "name": "6d4da268-fb61-412b-91d8-8e33227b4e5a",
+            "dependsOn": [
+                "[concat('ManagedId_', parameters('Username'), '_', parameters('Timestamp'))]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+                "principalId": "[reference(concat(subscription().id, '/resourceGroups/', variables('ResourceGroup'),'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uami-deploykek'), '2018-11-30', 'Full').properties.principalId]",
+                "scope": "[subscription().id]"
+            }
+        },
+        {
+            "comments": "---------- LINKED DEPLOYMENT > SHARED > PRIMARY REGION ----------",
+            "type": "Microsoft.Resources/deployments",
+            "name": "[concat('Shared_', parameters('Username'), '_', parameters('Timestamp'))]",
+            "apiVersion": "2019-10-01",
+            "tags": {},
+            "dependsOn": [
+                "[variables('ResourceGroup')]",
+                "[concat('ManagedId_', parameters('Username'), '_', parameters('Timestamp'))]",
+                "6d4da268-fb61-412b-91d8-8e33227b4e5a"
+            ],
+            "resourceGroup": "[variables('ResourceGroup')]",
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                    "Timestamp": {
+                        "value": "[parameters('Timestamp')]"
+                    },
+                    "UserObjectId": {
+                        "value": "[parameters('UserObjectId')]"
+                    }
+                },
+                "templateLink": {
+                    "uri": ""
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

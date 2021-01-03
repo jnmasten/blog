@@ -1,0 +1,158 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Timestamp": {
+            "type": "string"
+        },
+        "UserObjectId": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "guid": "[guid(deployment().name)]"
+    },
+    "resources": [
+        {
+            "comments": "---------- KEY VAULT ----------",
+            "type": "Microsoft.KeyVault/vaults",
+            "name": "[concat('kv-d-', resourceGroup().location,'-', variables('guid'))]",
+            "apiVersion": "2016-10-01",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "dependsOn": [],
+            "properties": {
+                "tenantId": "[subscription().tenantId]",
+                "sku": {
+                    "family": "A",
+                    "name": "Standard"
+                },
+                "accessPolicies": [
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "[parameters('UserObjectId')]",
+                        "permissions": {
+                            "keys": [
+                                "encrypt",
+                                "decrypt",
+                                "wrapKey",
+                                "unwrapKey",
+                                "sign",
+                                "verify",
+                                "get",
+                                "list",
+                                "create",
+                                "update",
+                                "import",
+                                "delete",
+                                "backup",
+                                "restore",
+                                "recover",
+                                "purge"
+                            ],
+                            "secrets": [
+                                "get",
+                                "list",
+                                "set",
+                                "delete",
+                                "backup",
+                                "restore",
+                                "recover",
+                                "purge"
+                            ],
+                            "certificates": [
+                                
+                            ]
+                        }
+                    },
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'uami-deploykek'), '2018-11-30', 'Full').properties.principalId]",
+                        "permissions": {
+                            "keys": [
+                                "encrypt",
+                                "decrypt",
+                                "wrapKey",
+                                "unwrapKey",
+                                "sign",
+                                "verify",
+                                "get",
+                                "list",
+                                "create",
+                                "update",
+                                "import",
+                                "delete",
+                                "backup",
+                                "restore",
+                                "recover",
+                                "purge"
+                            ],
+                            "secrets": []
+                        }
+                    }
+                ],
+                "enabledForDeployment": true,
+                "enabledForTemplateDeployment": true,
+                "enabledForDiskEncryption": true
+            }
+        },
+        {
+            "comments": "---------- KEY VAULT > KEY ENCRYPTION KEY ----------",
+            "name": "ds-diskencryptionkek",
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities','uami-deploykek')]": {}
+                }
+            },
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell",
+            "tags": {},
+            "dependsOn": [
+                "[concat('kv-d-', resourceGroup().location, '-', variables('guid'))]"
+            ],
+            "properties": {
+                "azPowerShellVersion": "3.0.0",
+                "cleanupPreference": "OnSuccess",
+                "scriptContent": "
+                    param(
+                        [string] [Parameter(Mandatory=$true)] $KeyVault
+                    )
+
+                    if(!(Get-AzKeyVaultKey -Name DiskEncryption -VaultName $KeyVault))
+                    {
+                        Add-AzKeyVaultKey -Name DiskEncryption -VaultName $KeyVault -Destination Software
+                    }
+
+                    $KeyEncryptionKeyURL = (Get-AzKeyVaultKey -VaultName $KeyVault -Name 'DiskEncryption' -IncludeVersions | Where-Object {$_.Enabled -eq $true}).Id
+                
+                    Write-Output $KeyEncryptionKeyURL
+
+                    $DeploymentScriptOutputs = @{}
+            
+                    $DeploymentScriptOutputs['text'] = $KeyEncryptionKeyURL 
+                ",
+                "arguments": "[format(' -KeyVault {0}', concat('kv-d-', resourceGroup().location), '-', variables('guid'))]",
+                "forceUpdateTag": "[parameters('Timestamp')]",
+                "retentionInterval": "P1D",
+                "timeout": "PT30M"
+            }
+        },
+        {
+            "comments": "---------- KEY VAULT > SECRET > KEK URL ----------",
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2016-10-01",
+            "name": "[concat('kv-d-', resourceGroup().location, '-', variables('guid'))]",
+            "tags": {},
+            "dependsOn": [
+                "ds-diskencryptionkek"
+            ],
+            "properties": {
+                "value": "[reference('ds-diskencryptionkek').outputs.text]"
+            }
+        }
+    ],
+    "outputs": {}
+}
