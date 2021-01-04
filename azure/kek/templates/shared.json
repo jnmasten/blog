@@ -9,14 +9,11 @@
             "type": "string"
         }
     },
-    "variables": {
-        "guid": "[guid(deployment().name)]"
-    },
     "resources": [
         {
             "comments": "---------- KEY VAULT ----------",
             "type": "Microsoft.KeyVault/vaults",
-            "name": "[concat('kv-d-', resourceGroup().location,'-', variables('guid'))]",
+            "name": "[concat('kv-d-', resourceGroup().location,'-', parameters('Timestamp'))]",
             "apiVersion": "2016-10-01",
             "location": "[resourceGroup().location]",
             "tags": {},
@@ -111,7 +108,7 @@
             "kind": "AzurePowerShell",
             "tags": {},
             "dependsOn": [
-                "[concat('kv-d-', resourceGroup().location, '-', variables('guid'))]"
+                "[concat('kv-d-', resourceGroup().location, '-', parameters('Timestamp'))]"
             ],
             "properties": {
                 "azPowerShellVersion": "3.0.0",
@@ -134,7 +131,7 @@
             
                     $DeploymentScriptOutputs['text'] = $KeyEncryptionKeyURL 
                 ",
-                "arguments": "[format(' -KeyVault {0}', concat('kv-d-', resourceGroup().location), '-', variables('guid'))]",
+                "arguments": "[format(' -KeyVault {0}', concat('kv-d-', resourceGroup().location), '-', parameters('Timestamp'))]",
                 "forceUpdateTag": "[parameters('Timestamp')]",
                 "retentionInterval": "P1D",
                 "timeout": "PT30M"
@@ -144,7 +141,7 @@
             "comments": "---------- KEY VAULT > SECRET > KEK URL ----------",
             "type": "Microsoft.KeyVault/vaults/secrets",
             "apiVersion": "2016-10-01",
-            "name": "[concat('kv-d-', resourceGroup().location, '-', variables('guid'), '/DiskEncryptionKekUrl')]",
+            "name": "[concat('kv-d-', resourceGroup().location, '-', parameters('Timestamp'), '/DiskEncryptionKekUrl')]",
             "tags": {},
             "dependsOn": [
                 "ds-diskencryptionkek"
