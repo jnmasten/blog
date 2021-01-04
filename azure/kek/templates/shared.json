@@ -132,7 +132,7 @@
                     $DeploymentScriptOutputs['text'] = $KeyEncryptionKeyURL
                     
                 ",
-                "arguments": "[format(' -KeyVault {0}', concat('kv-d-', resourceGroup().location), '-', parameters('Timestamp'))]",
+                "arguments": "[format(' -KeyVault {0}', concat('kv-d-', resourceGroup().location, '-', parameters('Timestamp')))]",
                 "forceUpdateTag": "[parameters('Timestamp')]",
                 "retentionInterval": "P1D",
                 "timeout": "PT30M"
