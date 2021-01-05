@@ -1,6 +1,7 @@
 Param(
 
-    [parameter(Mandatory=$true)][string]$Location
+    [parameter(Mandatory=$true)][string]$Location,
+    [parameter(Mandatory=$true)][string]$ResourceGroup
     
 )
 
@@ -21,6 +22,7 @@ $Name =  $Username + '_' + $TimeStamp
 # Template Parameter Object
 #############################################################
 $Params = @{
+    ResourceGroup = $ResourceGroup
     UserObjectId = $UserObjectId
     Username = $Username
 }

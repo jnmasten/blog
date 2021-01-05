@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/$scriptionDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "ResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Resource Group that will hold the Key Vault & User Assigned Managed Identity"
+            }
+        },
         "Timestamp": {
             "type": "string",
             "defaultValue": "[utcNow('yyyyMMddHHmm')]"
@@ -20,12 +26,11 @@
         }
     },
     "variables": {
-        "ResourceGroup": "rg-shared-d-eastus"
     },
     "resources": [
         {
             "comments": "---------- RESOURCE GROUP ----------",
-            "name": "[variables('ResourceGroup')]",
+            "name": "[parameters('ResourceGroup')]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2019-10-01",
             "location": "[deployment().location]",
@@ -39,9 +44,9 @@
             "apiVersion": "2019-10-01",
             "tags": {}, 
             "dependsOn": [
-                "[variables('ResourceGroup')]"
+                "[parameters('ResourceGroup')]"
             ],
-            "resourceGroup": "[variables('ResourceGroup')]",
+            "resourceGroup": "[parameters('ResourceGroup')]",
             "properties": {
                 "expressionEvaluationOptions": {
                     "scope": "inner"
@@ -59,12 +64,12 @@
             "apiVersion": "2017-09-01",
             "name": "6d4da268-fb61-412b-91d8-8e33227b4e5e",
             "dependsOn": [
-                "[variables('ResourceGroup')]",
+                "[parameters('ResourceGroup')]",
                 "[concat('ManagedId_', parameters('Username'), '_', parameters('Timestamp'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-                "principalId": "[reference(concat(subscription().id, '/resourceGroups/', variables('ResourceGroup'),'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uami-deploykek'), '2018-11-30', 'Full').properties.principalId]",
+                "principalId": "[reference(concat(subscription().id, '/resourceGroups/', parameters('ResourceGroup'),'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uami-deploykek'), '2018-11-30', 'Full').properties.principalId]",
                 "scope": "[subscription().id]"
             }
         },
@@ -75,11 +80,11 @@
             "apiVersion": "2019-10-01",
             "tags": {},
             "dependsOn": [
-                "[variables('ResourceGroup')]",
+                "[parameters('ResourceGroup')]",
                 "[concat('ManagedId_', parameters('Username'), '_', parameters('Timestamp'))]",
                 "6d4da268-fb61-412b-91d8-8e33227b4e5e"
             ],
-            "resourceGroup": "[variables('ResourceGroup')]",
+            "resourceGroup": "[parameters('ResourceGroup')]",
             "properties": {
                 "expressionEvaluationOptions": {
                     "scope": "inner"
