@@ -45,7 +45,7 @@
             "apiVersion": "2019-10-01",
             "tags": {}, 
             "dependsOn": [
-                "[subscriptionResourceId(subscription().id, 'Microsoft.Resources/resourceGroups', parameters('ResourceGroup'))]"
+                "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('ResourceGroup'))]"
             ],
             "resourceGroup": "[parameters('ResourceGroup')]",
             "properties": {
@@ -65,7 +65,7 @@
             "apiVersion": "2017-09-01",
             "name": "[variables('guid')]",
             "dependsOn": [
-                "[subscriptionResourceId(subscription().id, 'Microsoft.Resources/resourceGroups', parameters('ResourceGroup'))]",
+                "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('ResourceGroup'))]",
                 "[concat('ManagedId_', parameters('Username'), '_', parameters('Timestamp'))]"
             ],
             "properties": {
@@ -81,7 +81,7 @@
             "apiVersion": "2019-10-01",
             "tags": {},
             "dependsOn": [
-                "[subscriptionResourceId(subscription().id, 'Microsoft.Resources/resourceGroups', parameters('ResourceGroup'))]",
+                "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('ResourceGroup'))]",
                 "[concat('ManagedId_', parameters('Username'), '_', parameters('Timestamp'))]",
                 "[variables('guid')]"
             ],
