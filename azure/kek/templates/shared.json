@@ -58,7 +58,36 @@
                                 "purge"
                             ],
                             "certificates": [
-                                
+                                "get",
+                                "list",
+                                "delete",
+                                "create",
+                                "import",
+                                "update",
+                                "managecontacts",
+                                "getissuers",
+                                "listissuers",
+                                "setissuers",
+                                "deleteissuers",
+                                "manageissuers",
+                                "recover",
+                                "purge"
+                            ],
+                            "storage": [
+                                "get",
+                                "list",
+                                "delete",
+                                "set",
+                                "update",
+                                "regeneratekey",
+                                "recover",
+                                "purge",
+                                "backup",
+                                "restore",
+                                "setsas",
+                                "listsas",
+                                "getsas",
+                                "deletesas"
                             ]
                         }
                     },
@@ -67,22 +96,22 @@
                         "objectId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'uami-deploykek'), '2018-11-30', 'Full').properties.principalId]",
                         "permissions": {
                             "keys": [
-                                "encrypt",
-                                "decrypt",
-                                "wrapKey",
-                                "unwrapKey",
-                                "sign",
-                                "verify",
-                                "get",
-                                "list",
-                                "create",
-                                "update",
-                                "import",
-                                "delete",
-                                "backup",
-                                "restore",
-                                "recover",
-                                "purge"
+                                //"encrypt",
+                                //"decrypt",
+                                //"wrapKey",
+                                //"unwrapKey",
+                                //"sign",
+                                //"verify",
+                                //"get",
+                                //"list",
+                                "create"
+                                //"update",
+                                //"import",
+                                //"delete",
+                                //"backup",
+                                //"restore",
+                                //"recover",
+                                //"purge"
                             ],
                             "secrets": []
                         }
