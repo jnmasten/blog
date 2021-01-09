@@ -36,7 +36,11 @@
             "apiVersion": "2019-10-01",
             "location": "[deployment().location]",
             "tags": {},
-            "properties": {}
+            "properties": {},
+            "copy": {
+                "name": "rgLoop",
+                "count": 1
+            }
         },
         {
             "comments": "---------- LINKED DEPLOYMENT > USER ASSIGNED MANAGED IDENTITY ----------",
