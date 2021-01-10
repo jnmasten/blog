@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/$scriptionDeploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "ResourceGroup": {
@@ -25,9 +25,7 @@
             }
         }
     },
-    "variables": {
-        "guid": "[guid(deployment().name)]"
-    },
+    "variables": {},
     "resources": [
         {
             "comments": "---------- RESOURCE GROUP ----------",
@@ -43,51 +41,13 @@
             }
         },
         {
-            "comments": "---------- LINKED DEPLOYMENT > USER ASSIGNED MANAGED IDENTITY ----------",
+            "comments": "---------- NESTED DEPLOYMENT ----------",
             "type": "Microsoft.Resources/deployments",
             "name": "[concat('ManagedId_', parameters('Username'), '_', parameters('Timestamp'))]",
-            "apiVersion": "2019-10-01",
-            "tags": {}, 
-            "dependsOn": [
-                "rgLoop"
-            ],
-            "resourceGroup": "[parameters('ResourceGroup')]",
-            "properties": {
-                "expressionEvaluationOptions": {
-                    "scope": "inner"
-                },
-                "mode": "Incremental",
-                "parameters": {},
-                "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/jnmasten/blog/main/azure/kek/templates/userassignedmanagedidentity.json"
-                }
-            }
-        },
-        {
-            "comments": "---------- ROLE ASSIGNMENT > USER ASSIGNED MANAGED IDENTITY ----------",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2017-09-01",
-            "name": "[variables('guid')]",
-            "dependsOn": [
-                "rgLoop",
-                "[concat('ManagedId_', parameters('Username'), '_', parameters('Timestamp'))]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-                "principalId": "[reference(concat(subscription().id, '/resourceGroups/', parameters('ResourceGroup'),'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uami-deploykek'), '2018-11-30', 'Full').properties.principalId]",
-                "scope": "[subscription().id]"
-            }
-        },
-        {
-            "comments": "---------- LINKED DEPLOYMENT > SHARED ----------",
-            "type": "Microsoft.Resources/deployments",
-            "name": "[concat('Shared_', parameters('Username'), '_', parameters('Timestamp'))]",
-            "apiVersion": "2019-10-01",
+            "apiVersion": "2020-06-01",
             "tags": {},
             "dependsOn": [
-                "rgLoop",
-                "[concat('ManagedId_', parameters('Username'), '_', parameters('Timestamp'))]",
-                "[variables('guid')]"
+                "rgLoop"
             ],
             "resourceGroup": "[parameters('ResourceGroup')]",
             "properties": {
@@ -103,8 +63,205 @@
                         "value": "[parameters('UserObjectId')]"
                     }
                 },
-                "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/jnmasten/blog/main/azure/kek/templates/shared.json"
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "Timestamp": {
+                            "type": "string"
+                        },
+                        "UserObjectId": {
+                            "type": "string"
+                        }
+                    },
+                    "functions": [],
+                    "variables": {
+                        "guid": "[guid(deployment().name)]",
+                        "keyVault": "[concat('kv-d-', resourceGroup().location,'-', parameters('Timestamp'))]"
+                    },
+                    "resources": [
+                        {
+                            "comments": "---------- USER ASSIGNED MANAGED IDENTITY ----------",
+                            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+                            "name": "uami-deploykek",
+                            "apiVersion": "2018-11-30",
+                            "location": "[resourceGroup().location]",
+                            "dependsOn": []
+                        },
+                        {
+                            
+                            "type": "Microsoft.Authorization/roleAssignments",
+                            "name": "[variables('guid')]",
+                            "apiVersion": "2020-04-01-preview",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'uami-deploykek')]",
+                                "[resourceId('Microsoft.KeyVault/vaults', variables('keyVault'))]"
+                            ],
+                            "properties": {
+                                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+                                "principalId": "[reference('uami-deploykek').principalId]"
+                            }
+                        },
+                        {
+                            "comments": "---------- KEY VAULT ----------",
+                            "type": "Microsoft.KeyVault/vaults",
+                            "name": "[variables('keyVault')]",
+                            "apiVersion": "2016-10-01",
+                            "location": "[resourceGroup().location]",
+                            "tags": {},
+                            "dependsOn": [],
+                            "properties": {
+                                "tenantId": "[subscription().tenantId]",
+                                "sku": {
+                                    "family": "A",
+                                    "name": "Standard"
+                                },
+                                "accessPolicies": [
+                                    {
+                                        "tenantId": "[subscription().tenantId]",
+                                        "objectId": "[parameters('UserObjectId')]",
+                                        "permissions": {
+                                            "keys": [
+                                                "encrypt",
+                                                "decrypt",
+                                                "wrapKey",
+                                                "unwrapKey",
+                                                "sign",
+                                                "verify",
+                                                "get",
+                                                "list",
+                                                "create",
+                                                "update",
+                                                "import",
+                                                "delete",
+                                                "backup",
+                                                "restore",
+                                                "recover",
+                                                "purge"
+                                            ],
+                                            "secrets": [
+                                                "get",
+                                                "list",
+                                                "set",
+                                                "delete",
+                                                "backup",
+                                                "restore",
+                                                "recover",
+                                                "purge"
+                                            ],
+                                            "certificates": [
+                                                "get",
+                                                "list",
+                                                "delete",
+                                                "create",
+                                                "import",
+                                                "update",
+                                                "managecontacts",
+                                                "getissuers",
+                                                "listissuers",
+                                                "setissuers",
+                                                "deleteissuers",
+                                                "manageissuers",
+                                                "recover",
+                                                "purge"
+                                            ],
+                                            "storage": [
+                                                "get",
+                                                "list",
+                                                "delete",
+                                                "set",
+                                                "update",
+                                                "regeneratekey",
+                                                "recover",
+                                                "purge",
+                                                "backup",
+                                                "restore",
+                                                "setsas",
+                                                "listsas",
+                                                "getsas",
+                                                "deletesas"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "tenantId": "[subscription().tenantId]",
+                                        "objectId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'uami-deploykek'), '2018-11-30', 'Full').properties.principalId]",
+                                        "permissions": {
+                                            "keys": [
+                                                "get",
+                                                "list",
+                                                "create"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "enabledForDeployment": true,
+                                "enabledForTemplateDeployment": true,
+                                "enabledForDiskEncryption": true
+                            }
+                        },
+                        {
+                            "comments": "---------- DEPLOYMENT SCRIPT > KEK ----------",
+                            "name": "ds-diskencryptionkek",
+                            "type": "Microsoft.Resources/deploymentScripts",
+                            "apiVersion": "2019-10-01-preview",
+                            "identity": {
+                                "type": "UserAssigned",
+                                "userAssignedIdentities": {
+                                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities','uami-deploykek')]": {}
+                                }
+                            },
+                            "location": "[resourceGroup().location]",
+                            "kind": "AzurePowerShell",
+                            "tags": {},
+                            "dependsOn": [
+                                "uami-deploykek",
+                                "[variables('guid')]",
+                                "[variables('keyVault')]"
+                            ],
+                            "properties": {
+                                "azPowerShellVersion": "3.0.0",
+                                "cleanupPreference": "OnSuccess",
+                                "scriptContent": "
+                                    param(
+                                        [string] [Parameter(Mandatory=$true)] $KeyVault
+                                    )
+                                    
+                                    if(!(Get-AzKeyVaultKey -Name DiskEncryption -VaultName $KeyVault))
+                                    {
+                                        Add-AzKeyVaultKey -Name DiskEncryption -VaultName $KeyVault -Destination Software
+                                    }
+                                    
+                                    $KeyEncryptionKeyURL = (Get-AzKeyVaultKey -VaultName $KeyVault -Name 'DiskEncryption' -IncludeVersions | Where-Object {$_.Enabled -eq $true}).Id
+                                    
+                                    Write-Output $KeyEncryptionKeyURL
+                                    
+                                    $DeploymentScriptOutputs = @{}
+                                    
+                                    $DeploymentScriptOutputs['text'] = $KeyEncryptionKeyURL
+                                    
+                                    ",
+                                "arguments": "[format(' -KeyVault {0}', variables('keyVault'))]",
+                                "forceUpdateTag": "[parameters('Timestamp')]",
+                                "retentionInterval": "P1D",
+                                "timeout": "PT30M"
+                            }
+                        },
+                        {
+                            "comments": "---------- KEY VAULT > SECRET > KEK URL ----------",
+                            "type": "Microsoft.KeyVault/vaults/secrets",
+                            "apiVersion": "2016-10-01",
+                            "name": "[concat(variables('keyVault'), '/DiskEncryptionKekUrl')]",
+                            "tags": {},
+                            "dependsOn": [
+                                "ds-diskencryptionkek"
+                            ],
+                            "properties": {
+                                "value": "[reference('ds-diskencryptionkek').outputs.text]"
+                            }
+                        }
+                    ],
+                    "outputs": {}
                 }
             }
         }
