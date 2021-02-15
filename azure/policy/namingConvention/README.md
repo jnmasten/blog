@@ -23,7 +23,7 @@ $definition = New-AzPolicyDefinition `
 New-AzPolicyAssignment `
     -Name '<Assignment Name>' `
     -Scope '<Scope>' `
-    -Application '<Application>' ` 
+    -Application '<Application>' `
     -Environment '<Environment Abbreviation>' `
     -DataCenterCountry '<Data Center Country>' `
     -DataCenterLocation '<Primary Location Abbreviation>' `
