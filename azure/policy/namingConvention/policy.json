@@ -17,13 +17,14 @@
             "Environment": {
                 "type": "String",
                 "metadata": {
-                    "description": "Use 1 character for the environment abbreviation",
+                    "description": "Use 1 character for the environment abbreviation: 'd' = Dev, 'p' = Production, 's' = Stage, & 't' = Test ",
                     "displayName": "Environment Abbreviation"
                 },
                 "allowedValues": [
                     "d",
-                    "t",
-                    "p"
+                    "p",
+                    "s",
+                    "t"
                 ]
             },
             "DataCenterCountry": {
@@ -101,7 +102,7 @@
             "WebTier": {
                 "type": "String",
                 "metadata": {
-                    "description": "Use 1 character to abbreviate the web or presentation tier. 'p' stands for presentation. 'w' stands for web",
+                    "description": "Use 1 character to abbreviate the web or presentation tier: 'p' = Presentation & 'w' = Web",
                     "displayName": "Web Tier Abbreviation"
                 },
                 "defaultVaule": "w",
@@ -113,7 +114,7 @@
             "LogicTier": {
                 "type": "String",
                 "metadata": {
-                    "description": "Use 1 character to abbreviate the business logic tier.  'l' stands for logic.",
+                    "description": "Use 1 character to abbreviate the business logic tier:  'l' = Logic.",
                     "displayName": "Logic Tier Abbreviation"
                 },
                 "defaultValue": "l",
@@ -124,7 +125,7 @@
             "DataTier": {
                 "type": "String",
                 "metadata": {
-                    "description": "Use 1 character to abbreviate the database tier. 'd' stands for database.",
+                    "description": "Use 1 character to abbreviate the database tier: 'd' = Database.",
                     "displayName": "Data Tier Abbreviation"
                 },
                 "defaultValue": "d",
