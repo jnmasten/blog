@@ -60,41 +60,11 @@
             "za"
         ]
     },
-    "DataCenterLocation1": {
+    "DataCenterLocation": {
         "type": "String",
         "metadata": {
             "description": "Use 1 - 2 characters to abbreviate the Azure location (e.g., 'e' for East US or 'e2' for East US 2).",
             "displayName": "Data Center Location 1 Abbreviation"
-        },
-        "allowedValues": [
-            "e",
-            "e2",
-            "e3",
-            "c",
-            "c2",
-            "dc",
-            "de",
-            "ga",
-            "gt",
-            "gv",
-            "n",
-            "n2",
-            "nc",
-            "ne",
-            "s",
-            "sc",
-            "se",
-            "w",
-            "w2",
-            "w3",
-            "wc"
-        ]
-    },
-    "DataCenterLocation2": {
-        "type": "String",
-        "metadata": {
-            "description": "Use 2 characters to abbreviate the Azure location (e.g., 'e' for East US or 'e2' for East US 2).",
-            "displayName": "Data Center Location 2 Abbreviation"
         },
         "allowedValues": [
             "e",

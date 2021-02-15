@@ -3,27 +3,15 @@
         "allOf": [
             {
                 "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation1'), parameters('Environment'), parameters('WebTier'), '#')]"
+                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation'), parameters('Environment'), parameters('WebTier'), '#')]"
             },
             {
                 "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation2'), parameters('Environment'), parameters('WebTier'), '#')]"
+                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation'), parameters('Environment'), parameters('LogicTier'), '#')]"
             },
             {
                 "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation1'), parameters('Environment'), parameters('LogicTier'), '#')]"
-            },
-            {
-                "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation2'), parameters('Environment'), parameters('LogicTier'), '#')]"
-            },
-            {
-                "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation1'), parameters('Environment'), parameters('DataTier'), '#')]"
-            },
-            {
-                "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation2'), parameters('Environment'), parameters('DataTier'), '#')]"
+                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation'), parameters('Environment'), parameters('DataTier'), '#')]"
             },
             {
                 "field": "type",
