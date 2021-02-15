@@ -26,8 +26,7 @@ New-AzPolicyAssignment `
     -Application '<Application>' ` 
     -Environment '<Environment Abbreviation>' `
     -DataCenterCountry '<Data Center Country>' `
-    -DataCenterLocation1 '<Primary Location Abbreviation>' `
-    -DataCenterLocation2 '<Secondary Location Abbreviation>' `
+    -DataCenterLocation '<Primary Location Abbreviation>' `
     -PolicyDefinition $definition
 
 ````
