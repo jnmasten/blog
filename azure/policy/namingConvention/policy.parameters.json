@@ -2,8 +2,8 @@
     "Application": {
         "type": "String",
         "metadata": {
-            "description": "Use 1 - 6 characters for the application abbreviation",
-            "displayName": "Application Abbreviation"
+            "description": "Use 1 - 6 characters for the application name or abbreviation",
+            "displayName": "Application Name or Abbreviation"
         }
     },
     "Environment": {
@@ -65,7 +65,7 @@
         "type": "String",
         "metadata": {
             "description": "Use 1 - 2 characters to abbreviate the Azure location (e.g., 'e' for East US or 'e2' for East US 2).",
-            "displayName": "Data Center Location 1 Abbreviation"
+            "displayName": "Data Center Location Abbreviation"
         },
         "allowedValues": [
             "e",
