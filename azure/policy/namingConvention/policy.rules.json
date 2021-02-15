@@ -3,51 +3,27 @@
         "allOf": [
             {
                 "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier1'), parameters('Location1'), '1')]"
+                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation1'), parameters('Environment'), parameters('WebTier'), '#')]"
             },
             {
                 "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier1'), parameters('Location1'), '2')]"
+                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation2'), parameters('Environment'), parameters('WebTier'), '#')]"
             },
             {
                 "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier1'), parameters('Location2'), '1')]"
+                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation1'), parameters('Environment'), parameters('LogicTier'), '#')]"
             },
             {
                 "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier1'), parameters('Location2'), '2')]"
+                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation2'), parameters('Environment'), parameters('LogicTier'), '#')]"
             },
             {
                 "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier2'), parameters('Location1'), '1')]"
+                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation1'), parameters('Environment'), parameters('DataTier'), '#')]"
             },
             {
                 "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier2'), parameters('Location1'), '2')]"
-            },
-            {
-                "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier2'), parameters('Location2'), '1')]"
-            },
-            {
-                "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier2'), parameters('Location2'), '2')]"
-            },
-            {
-                "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier3'), parameters('Location1'), '1')]"
-            },
-            {
-                "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier3'), parameters('Location1'), '2')]"
-            },
-            {
-                "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier3'), parameters('Location2'), '1')]"
-            },
-            {
-                "field": "name",
-                "notMatch": "[concat('vm', parameters('Application'), parameters('Environment'), parameters('Tier3'), parameters('Location2'), '2')]"
+                "notMatch": "[concat('vm', parameters('Application'), parameters('DataCenterCountry'), parameters('DataCenterLocation2'), parameters('Environment'), parameters('DataTier'), '#')]"
             },
             {
                 "field": "type",
