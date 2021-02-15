@@ -97,7 +97,7 @@
             "description": "Use 1 character to abbreviate the web or presentation tier: 'p' = Presentation & 'w' = Web",
             "displayName": "Web Tier Abbreviation"
         },
-        "defaultVaule": "w",
+        "defaultValue": "w",
         "allowedValues": [
             "w",
             "p"
