@@ -2,7 +2,7 @@
     "properties": {
         "mode": "All",
         "displayName": "NamingStandard_VirtualMachine_Deny",
-        "description": "This policy governs the naming standard for virtual machines within the specified scope.  The naming scheme is 'vm + app + location + env + tier + ordinal'.  Each component of the naming scheme has a max allowed character length: vm = 2, app = 6, country = 2, region = 2, env = 1, tier = 1, ordinal = 1.  This scheme exhausts the max allowed characters (15) for a virtual machine name.",
+        "description": "This policy governs the naming standard for virtual machines.  This policy should be assigned at the resource group scope.  The naming scheme is 'vm + app name / abbreviation + location + environment + app tier + ordinal'.  Each component of the naming scheme has a maximum allowed character length: resource type = 2, app name / abbreviation = 6, country = 2, region = 2, environment = 1, app tier = 1, ordinal = 1.  This scheme exhausts the max allowed characters (15) for a virtual machine name.",
         "metadata": {
             "category": "Governance"
         },
