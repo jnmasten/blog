@@ -15,7 +15,9 @@
     $Sorted = $Data | Sort-Object
     $Output = foreach($Obj in $Sorted)
     {
-        $Obj[0] + $Obj[1] + $Obj[2] + '.' + $Obj[3] + $Obj[4] + $Obj[5] + '.' + $Obj[6] + $Obj[7] + $Obj[8] + '.' + $Obj[9] + $Obj[10] + $Obj[11]
+      # $Obj[0] + $Obj[1] + $Obj[2] + '.' + $Obj[3] + $Obj[4] + $Obj[5] + '.' + $Obj[6] + $Obj[7] + $Obj[8] + '.' + $Obj[9] + $Obj[10] + $Obj[11]
+      $temp = ($obj -split '(?<=\G.{3})' ) -replace '^0{1,2}'
+      $temp [0] + '.' + $temp [1] + '.' + $temp [2] + '.' + $temp [3]
     }
     $Output
 }
